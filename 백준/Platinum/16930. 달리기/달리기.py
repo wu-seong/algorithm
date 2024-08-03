@@ -1,15 +1,8 @@
-# 3 4 4
-# ....
-# ###.
-# ....
-# 1 1 3 1
-
 import sys
 from collections import deque
 input = sys.stdin.readline
 
 N,M,K = map(int, input().rstrip().split())
-
 
 gym = [list(input().rstrip()) for _ in range(N)]
 gym.insert(0,0)
@@ -32,80 +25,37 @@ while queue:
     if (x,y) == (end_x,end_y):
         print(t)
         exit()
-    # 오른 방향
-    for k in range(1,K+1):
-        if 1 <= x <= N and 1 <= y+k <= M:
-            if gym[x][y+k] == '#':
-                #print("오른쪽으로는 못 감")
-                break
-            if visited[x][y+k][0]:
-                if visited[x][y+k][1] < t+1:
+
+    for dx,dy in [(0,1),(0,-1),(1,0),(-1,0)]:
+        for k in range(1,K+1):
+            xx = x+(dx*k)
+            yy = y+(dy*k)
+            if 1 <= xx <= N and 1 <= yy <= M:
+                # 벽이면 그 방향으로 탐색 못함
+                if gym[xx][yy] == '#':
                     break
+                # 빈칸이면 방문 여부 확인
                 else:
-                    visited[x][y+k][1] = t+1
-            if not visited[x][y+k][0] and gym[x][y+k] == '.':
-                visited[x][y+k][0] = True
-                visited[x][y+k][1] = t+1
-                queue.append((x,y+k,t+1))
-        else:
-            #print("맵 밖이라 오른쪽으로는 못 감")
-            break
-    # 왼 뱡향
-    for k in range(1,K+1):
-        if 1 <= x <= N and 1 <= y-k <= M:
-            if gym[x][y-k] == '#':
-                #print("왼쪽으로는 못 감")
+                    # 이전에 방문 o
+                    if visited[xx][yy][0]:
+                        # 더 빠른 시간에 방문 했더라면 그 방향으로 더 이상 탐색 x (이미 같거나 더 빠른시간으로 탐색이 진행 됐으므로)
+                        if visited[xx][yy][1] < t+1:
+                            break
+                        # 내가 방문한 시간이 같거나 더 이른 경우, (사실 같을 수는 있어도 더 이를 순 없다.)
+                        else:
+                            visited[xx][yy][1] = t+1
+                    # 이전에 방문 x 방문체크하고 방문한 시간 남기기
+                    else:
+                        visited[xx][yy][0] = True
+                        visited[xx][yy][1] = t+1
+                        queue.append((xx,yy,t+1))
+            # 체육관 외부
+            else:
                 break
-            if visited[x][y-k][0]:
-                if visited[x][y-k][1] < t+1:
-                    break
-                else:
-                    visited[x][y-k][1] = t+1
-            if not visited[x][y-k][0] and gym[x][y-k] == '.':
-                visited[x][y-k][0] = True
-                visited[x][y-k][1] = t+1
-                queue.append((x,y-k,t+1))
-        else:
-            #print("맵 밖이라 왼쪽으로는 못 감")
-            break
-    # 윗 방향
-    for k in range(1,K+1):
-        if 1 <= x+k <= N and 1 <= y <= M:
-            if gym[x+k][y] == '#':
-                #print("윗방향으로는 못 감")
-                break
-            if visited[x+k][y][0]:
-                if visited[x+k][y][1] < t+1:
-                    break
-                else:
-                    visited[x+k][y][1] = t+1
-            if not visited[x+k][y][0] and gym[x+k][y] == '.':
-                visited[x+k][y][0] = True
-                visited[x+k][y][1] = t+1
-                queue.append((x+k,y,t+1))
-        else:
-            #print("맵 밖이라 위쪽으로는 못 감")
-            break
-    # 아랫 방향
-    for k in range(1,K+1):
-        if 1 <= x-k <= N and 1 <= y <= M:
-            if gym[x-k][y] == '#':
-                #print("아랫방향으로는 못 감")
-                break
-            if visited[x-k][y][0]:
-                if visited[x-k][y][1] < t+1:
-                    break
-                else:
-                    visited[x-k][y][1] = t+1
-            if not visited[x-k][y][0] and gym[x-k][y] == '.':
-                visited[x-k][y][0] = True
-                visited[x-k][y][1] = t+1
-                queue.append((x-k,y,t+1))
-        else:
-            #print("맵 밖이라 아랫쪽으로는 못 감")
-            break
 print("-1")
 
-# 탐색을 하다 visited를 만나면 그 즉시, 
 
-# 끝점 도달 시 지난 시간 출력
+# 단순 상하좌우 탐색이 아니라 상하좌우 방향으로 K만큼 탐색이기 때문에 몇가지 더 고려해야함
+# 1. 현재 방향으로의 탐색이 벽에 막힌적이 있는지
+# 2. 현재 방향으로의 탐색이 이미 진행된적이 있는지 (이 경우 탐색하지 않음)
+# 3. 현재 방향의 탐색과 수직 방향의 탐색경로가 겹친적이 있는지 이루어진적이 있는지(겹친 칸의 시간이 같다면 겹친 칸의 진행 방향으로의 칸은 t+1을 가지기 때문에 시간이 더 빠르지 않다면 탐색 해주어야 한다.)
