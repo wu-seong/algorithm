@@ -27,15 +27,13 @@ if max_length == 0:
 
 # 정보를 역추적
 n,m = N,M
-r_str = []
+r_str = ""
 while n != 0 and m != 0:
     next_n = dp[m][n][1]
     # 새로운 문자가 추가된 경우에만 문자를 추가
     if next_n == (m-1,n-1):
-        r_str.append(s2[n])
+        r_str = s2[n] + r_str
     m,n = next_n
-r_str.reverse()
-for c in r_str:
-    print("%s" %c)
-print("\n")
+print("%s\n" %r_str)
+
     
