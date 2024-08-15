@@ -2,11 +2,8 @@ import sys
 input = sys.stdin.readline
 
 # 추가한 동전이 10,000을 넘을 때 pass
-
 # 추가한 동전이 k보다 작을 때 -> 이전 ans
-
 # 추가한 동전이 k와 같을 때 -> 1
-
 # 추가한 동전이 k보다 클 때 -> min(dp[i-1][j], dp[coin] + dp[i][j-coin])
 
 # dp[i]
@@ -21,19 +18,20 @@ for i in range(n):
 if not coins:
     print(-1)
     exit()
-dp = [ [ float('inf') for _ in range(k+1)] for _ in range(n)]
-
+dp = [ float('inf') for _ in range(k+1)]
 
 for i in range(n):
-    for j in range(1,k+1):
-        if coins[i] > j:
-            dp[i][j] = dp[i-1][j]
-        elif coins[i] == j:
-            dp[i][j] = 1
+    for j in range(coins[i],k+1):
+        if coins[i] == j:
+            dp[j] = 1
         elif coins[i] < j:
-            dp[i][j] = min(dp[i-1][j], dp[i][coins[i]] + dp[i][j-coins[i]])
-
-if dp[n-1][k] == float('inf'):
+            dp[j] = min(dp[j], 1 + dp[j-coins[i]])
+if dp[k] == float('inf'):
     print(-1)
     exit()
-print(dp[n-1][k])
+print(dp[k])
+
+
+# 최적화
+# 바로 이전 solution만 이용하기 때문에 1차원으로도 가능
+# 사용할 코인부터 저장해도 됨
