@@ -27,4 +27,3 @@ def solution(n, k):
         cnt += 1
         #print(cnt)
     return cnt
-solution(110011, 10)
