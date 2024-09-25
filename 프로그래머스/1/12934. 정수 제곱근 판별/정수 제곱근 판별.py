@@ -4,7 +4,7 @@ def solution(n):
     # 정수 판단 방법 -> 1으로 나눈 몫이 원래와 같다면(소수 점이 존재한지 않는다면) 정수임
     root = n**(1/2)
     print(root)
-    if root // 1 == root:
+    if root.is_integer():
         return (root+1)**2
     else:
         return -1
