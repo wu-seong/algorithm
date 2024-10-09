@@ -15,6 +15,7 @@ def solution(elements):
                 cnt += 1
                 sums.add(temp)
     return cnt
-            
+
+# 시작점을 먼저 잡으면 이전 합에 더하여 더 효율적으로 구할 수 있음
         
     
