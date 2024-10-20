@@ -38,6 +38,7 @@ def solution(msg):
     print(result)
     return result
         
-            
+# 시작점과 끝점을 정확하게 생각하기 (반복문 마무리 조건 확실하게 하기)
+# 로직이 너무 복잡하면 함수로 빼기(추상화)
     
     
