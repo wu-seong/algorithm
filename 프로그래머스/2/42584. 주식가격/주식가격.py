@@ -29,4 +29,5 @@ def solution(prices):
         last_append_result(result,stack,n-1)
     #print(result)
     return result
+# 반복문에서 조금씩 달라지는 조건이 잘 유지 되는지 확인 ex) 여기서는 stack 또는 result
         
