@@ -16,12 +16,11 @@ def solution(skill, skill_trees):
     # skill의 순서에 맞는지 확인
     cnt = 0
     for skill_tree in new_skill_trees:
-        can = True
         for i in range(len(skill_tree)):
             if skill_tree[i] != skill[i]: # 하나라도 다르면 불가능
                 can = False
                 break
-        if can:
+        else:
             cnt += 1
     #print(cnt)
     return cnt
