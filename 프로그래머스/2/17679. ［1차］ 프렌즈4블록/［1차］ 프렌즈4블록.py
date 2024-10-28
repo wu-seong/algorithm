@@ -1,4 +1,3 @@
-
 def get_down_point(board,m,i,j):
     # 빈칸이 아닌 지점을 찾거나 바닥까지 내려왔을 때 까지 반복
     while i < m:
@@ -47,7 +46,6 @@ def add_remove_set(y,x, board, remove_set,m,n): # 현재 블록을 기준으로 
         if same: # 모든 블록이 존재하고 같으면 삭제 리스트 업데이트
             remove_set.update(set(add_list))
                     
-
 def solution(m, n, board):
     board = [ [ board[i][j] for j in range(n)] for i in range(m) ]
     total_cnt = 0 # 결과 카운팅
@@ -63,16 +61,13 @@ def solution(m, n, board):
         for y,x in remove_set: # 다 찾은 뒤에 -로 만들면서 카운팅하기
             board[y][x] = '-'
             
-        cnt = len(remove_set) # 
-        if cnt == 0:
+        cnt = len(remove_set) 
+        if cnt == 0: # 더 이상 터질 것이 없으면 끝
             return total_cnt
         total_cnt += cnt
-
         # 그위에 있는 것들 아래로 채우기
         move_block(board,m,n)
-        # for b in board:
-        #     print(b)
-
+    
 
     
     
