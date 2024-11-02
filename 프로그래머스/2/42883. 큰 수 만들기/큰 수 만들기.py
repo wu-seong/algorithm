@@ -17,6 +17,6 @@ def solution(number, k):
         stack = stack[:-k]
         return "".join(stack)
     return "".join(stack)
-# 배열 중간에 삭제해야 하는 경우 스택을 이용하면 더 간단해짐
+# 배열 중간에 하나씩 여러번 삭제해야 하는 경우 스택을 이용하면 더 간단해짐
 # 삭제하기 이전까지 스택에 저장하고 삭제할 것은 pop을 이용해서 삭제
 # 연속된 삭제를 하기에 좋음
