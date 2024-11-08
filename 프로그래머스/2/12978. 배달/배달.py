@@ -30,8 +30,8 @@ def solution(N, roads, K):
         while q:
             current, cost = heappop(q)
             
-            if cost > distance[current]:
-                continue
+            # if cost > distance[current]:
+            #     continue
             for v,w in graph[current]:
                 new_cost = w + cost
                 if new_cost < distance[v]:
