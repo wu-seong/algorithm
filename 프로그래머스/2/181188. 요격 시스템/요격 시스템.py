@@ -52,3 +52,5 @@ def solution(targets):
             cnt += 1
     print(cnt)
     return cnt
+
+# 전부 시뮬을 돌리기 보다는 구하려는 것이 무엇인지에 집중하고 그것을 위해 필요한 정보만 구하기
