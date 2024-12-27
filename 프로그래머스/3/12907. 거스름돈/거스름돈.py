@@ -19,9 +19,9 @@ def solution(n, coin):
     coin.sort()
     m = len(coin)
     dp = [[0 for _ in range(n+1)] for _ in range(m)]
-    for i in range(m):
+    for i in range(m): # 첫 동전의 배수
         dp[i][0] = 1
-    for j in range(1,n+1):
+    for j in range(1,n+1): # 0을 거스르는 경우를 1으로 둠
         if j % coin[0] == 0:
             dp[0][j] = 1
     for i in range(1,m):
@@ -29,8 +29,8 @@ def solution(n, coin):
         for j in range(1,n+1):
             #print(c,j)
             if j < c: # 동전의 종류가 추가되기 전과 같다.
-                dp[i][j] = dp[i-1][j]
+                dp[i][j] = dp[i-1][j]%(1e9+7)
             else:
-                dp[i][j] = dp[i-1][j] + dp[i][j-c]
+                dp[i][j] = (dp[i-1][j] + dp[i][j-c])%(1e9+7)
     #print(dp)
     return dp[m-1][n]
