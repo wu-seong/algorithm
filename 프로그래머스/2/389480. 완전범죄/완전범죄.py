@@ -1,27 +1,54 @@
-def solution(info, n, m):
-    memo = {}  # DP 메모이제이션 딕셔너리
-
-    def dfs(idx, sumA, sumB):
-        # B도둑이 흔적 한도를 넘기면 즉시 중단
-        if sumB >= m:
-            return float('inf')  # 불가능한 경우를 의미
-        
-        # 모든 물건을 고려했을 때
-        if idx == len(info):
-            return sumA if sumA < n else float('inf')  # A도둑이 초과하면 불가능
-        
-        # 메모이제이션 확인
-        if (idx, sumA, sumB) in memo:
-            return memo[(idx, sumA, sumB)]
-        
-        # 현재 물건을 A가 훔치는 경우와 B가 훔치는 경우를 탐색
-        pick_A = dfs(idx + 1, sumA + info[idx][0], sumB)  # A가 훔치는 경우
-        pick_B = dfs(idx + 1, sumA, sumB + info[idx][1])  # B가 훔치는 경우
-
-        # 두 경우 중 최소값 선택
-        memo[(idx, sumA, sumB)] = min(pick_A, pick_B)
-        return memo[(idx, sumA, sumB)]
-
-    result = dfs(0, 0, 0)
+# def solution(info, n, m):
+#     length = len(info)
+#     dp = [[float('inf') for _ in range(m)] for _ in range(length)]
+#     # A를 선택
+#     a,b = info[0]
+#     dp[0][0] = a
+#     # B를 선택
+#     if b < m:
+#         dp[0][b] = 0
+#     print('초기화:', dp)
     
-    return result if result != float('inf') else -1
+#     for i in range(1, len(info)):
+#         a,b = info[i]
+#         print(a,b)
+#         if m == 1:
+#             dp[i][0] = dp[i-1][0] + a
+#         for j in range(m-1, -1, -1):
+#             # A 선택하는 경우
+#             dp[i][j] = dp[i-1][j] + a
+#             # B 선택하는 경우 (j+b<m)
+#             if j + b < m:
+#                 dp[i][j + b] = min(dp[i][j + b], dp[i-1][j])
+#     for i in range(len(info)):
+#         print(dp[i])
+            
+def solution(info, n, m):
+    length = len(info)
+    dp = [[float('inf')] * m for _ in range(length)]
+
+    # 첫 번째 물건 처리
+    a, b = info[0]
+    dp[0][0] = a  # A가 선택한 경우
+    if b < m:
+        dp[0][b] = 0  # B가 선택한 경우
+
+    # DP 테이블 채우기
+    for i in range(1, length):
+        a, b = info[i]
+        
+        for j in range(m-1, -1, -1):  # 역순 탐색 (값이 덮어써지는 문제 방지)
+            # A를 선택하는 경우
+            dp[i][j] = min(dp[i][j], dp[i-1][j] + a)
+
+            # B를 선택하는 경우 (j+b가 m을 넘지 않는다면)
+            if j + b < m:
+                dp[i][j + b] = min(dp[i][j + b], dp[i-1][j])
+
+    # 결과 찾기
+    min_value = float('inf')
+    for value in dp[length - 1]:
+        if value < n:
+            min_value = min(min_value, value)
+
+    return min_value if min_value != float('inf') else -1
