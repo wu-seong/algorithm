@@ -1,31 +1,70 @@
 import sys
-from collections import deque
 input = sys.stdin.readline
+sys.setrecursionlimit(10**6)
+'''
+낮은 곳으로 dfs하기
+그런데 이미 방문한 곳이면
+dfs하는 것이 아니라 목적지 까지의 경우의 수 * 
 
 
-# start -> end까지 경로의 수 구해서 저장하는 함수
-def a(start):
-    y,x = start
-    cnt = 0
-    for dy, dx in [(1,0),(-1,0),(0,1),(0,-1)]:
-        yy = y + dy
-        xx = x + dx
-        if  0<= yy < M and 0 <= xx < N:
-            # 내리막길 이면 구하기
-            if m[yy][xx] < m[y][x]:
-                # 구하지 않았으면 구하기
-                if dp[yy][xx] == -1:
-                    a((yy,xx))
-                    cnt += dp[yy][xx]
-                # 이미 구했으면 가져오기
-                else:
-                    cnt += dp[yy][xx]
-    dp[y][x] = cnt
+다음이 목적지이면 + 1
+목적지가 아니면 다음의 경우의 수를 현재에 더하기
+목적지가 아니고 안 가본곳이면 재귀
+목적지가 아니고 가본 곳이면 그대로 더하기
 
-M,N = map(int,input().rstrip().split())
+dfs함수
+그래프를 미리 만들기
 
-dp = [ [ -1 for _ in range(N)] for _ in range(M)]
-dp[-1][-1] = 1
-m = [ list(map(int, input().rstrip().split())) for _ in range(M)]
-a((0,0))
-print(dp[0][0])
+'''
+
+from collections import defaultdict
+def solution(n, m, nnap):
+  graph = defaultdict(list)
+  dp = [[-1 for _ in range(m)] for _ in range(n)]
+
+  def set_next(y,x):
+    nonlocal graph
+    for dy, dx in [(1,0),(0,1),(-1,0),(0,-1)]:
+      yy, xx = y + dy, x + dx
+      if 0 <= yy < n and 0 <= xx < m and nnap[yy][xx] < nnap[y][x]:
+        graph[(y,x)].append((yy,xx))
+  def set_graph():
+    for i in range(n):
+      for j in range(m):
+        set_next(i,j)
+  set_graph()
+  #print(graph)
+
+  def dfs(cur):
+    nonlocal nnap
+    y,x = cur
+    if (y,x) == (n-1, m-1): # 도착지점의 경우
+      return 1
+    sum = 0
+    #print(len(graph[(y,x)]))
+    if len(graph[(y,x)]) == 0: # 갈 곳이 없을 경우
+      dp[y][x] = 0
+      return 0
+    for next in graph[(y,x)]:
+      yy,xx = next
+      if dp[yy][xx] == -1: # 안 가본 경우
+        sum += dfs(next)
+      else:
+        sum += dp[yy][xx]
+    dp[y][x] = sum
+    return sum
+  dfs((0,0))
+  print(dp[0][0])
+
+n,m = map(int, input().rstrip().split())
+nnap = []
+for _ in range(n):
+  nnap.append(list(map(int, (input().rstrip().split()))))
+#print(nnap)
+solution(n,m, nnap)
+'''
+3 3
+9 8 7
+6 5 4
+3 2 1
+'''
