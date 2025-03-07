@@ -1,43 +1,56 @@
 import sys
 sys.setrecursionlimit(10**6)
+'''
+모든 석유 영역에 대해서 bfs하면서 크기를 구하고 해당 석유 위치에 id마킹을 한다.
 
+'''
+from collections import deque
 def solution(land):
-    n, m = len(land), len(land[0])
-    area = [[0] * m for _ in range(n)]  # 각 위치의 석유량 저장
-    oil_sizes = {}  # {영역 ID: 석유량} 저장
-
-    def dfs(y, x, area_id):
-        stack = [(y, x)]
-        cells = []
-        while stack:
-            cy, cx = stack.pop()
-            if area[cy][cx] == 0:  # 방문하지 않은 경우만 탐색
-                area[cy][cx] = area_id  # 같은 영역 ID로 마킹
-                cells.append((cy, cx))
-                for dy, dx in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
-                    ny, nx = cy + dy, cx + dx
-                    if 0 <= ny < n and 0 <= nx < m and land[ny][nx] and area[ny][nx] == 0:
-                        stack.append((ny, nx))
+    n,m = len(land), len(land[0])
+    area = [[0 for _ in range(m)] for _ in range(n)]
+    size = {}
+    id = 1
+    def bfs(sy, sx):
+        nonlocal area, id
+        if not land[sy][sx] or area[sy][sx]:
+            return
+        q = deque()
+        area[sy][sx] = id
+        cnt = 0
+        q.append((sy,sx))
+        while q:
+            y,x = q.popleft()
+            cnt += 1
+            
+            for dy ,dx in [(1,0),(0,1),(-1,0),(0,-1)]:
+                yy, xx = y+dy, x+dx
+                if 0 <= yy < n and 0 <= xx < m and land[yy][xx] and not area[yy][xx]:
+                    area[yy][xx] = id
+                    q.append((yy,xx))
+        size[id] = cnt
+        id += 1
         
-        oil_sizes[area_id] = len(cells)  # 현재 영역의 총 석유량 저장
-
-    # Step 1: 모든 영역에 대해 DFS 수행하여 석유량 계산
-    area_id = 1  # 1부터 시작하여 각 영역을 구분
     for i in range(n):
         for j in range(m):
-            if land[i][j] == 1 and area[i][j] == 0:
-                dfs(i, j, area_id)
-                area_id += 1
-
-    # Step 2: 각 열(column)별로 석유량 계산
-    max_oil = 0
-    for x in range(m):
-        seen_areas = set()
-        total_oil = 0
-        for y in range(n):
-            if area[y][x] > 0 and area[y][x] not in seen_areas:
-                seen_areas.add(area[y][x])
-                total_oil += oil_sizes[area[y][x]]
-        max_oil = max(max_oil, total_oil)
-
-    return max_oil
+            bfs(i,j)
+        
+    # for a in area:
+    #     print(a)
+    # print(size)
+    
+    result = 0
+    for i in range(m): # 내려가면서 어떤 영역들이 존재하는지 찾기
+        areas = set()
+        for j in range(n):
+            if area[j][i]:
+                areas.add(area[j][i])
+        sum = 0
+        for a in areas:
+            sum += size[a]
+        result = max(result, sum)
+    print(result)
+    return result
+    
+            
+    
+    
