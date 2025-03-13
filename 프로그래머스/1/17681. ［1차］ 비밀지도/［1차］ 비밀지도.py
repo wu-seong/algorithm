@@ -1,15 +1,36 @@
+'''
+이진수로 변환해서 배열로 나타내기
+-> bin 함수로 이진수로 바꾸고 n - 길이 만큼 앞에 0 붙이기
+
+
+두 배열 or연산해서 최종 문자열 만들기
+'''
 def solution(n, arr1, arr2):
-    # arr1,2 각각 이진 문자열로 바꾸기 -> 비트 연산자 이용하면 안바꾸고도 or 연산 가능
-    # or연산하기 -> 각각을 or연산보다 '|' 비트 연산자 활용 가능
-    # 1인 부분 # 0은 공백으로 출력하기
+    def to_str(num): # 숫자 받아서 0,1로 이루어진 문자열로 바꾸기
+        bin_num = bin(num)[2:]
+        need_zero = n - len(bin_num)
+        return '0'*(need_zero) + bin_num
+    # 숫자 모두 문자열로 바꾸기
+    for i, n1 in enumerate(arr1):
+        arr1[i] = to_str(n1)
+    for i, n2 in enumerate(arr2):
+        arr2[i] = to_str(n2)
+    # for a in arr1:
+    #     print(a)
     result = []
-    for num1, num2  in zip(arr1,arr2):
-        #print(num1,num2)
-        or_bit_str = bin(num1|num2)[2:]
-        or_bit_str = ('0'*(n-len(or_bit_str))) + or_bit_str
-        or_bit_str = or_bit_str.replace('1', '#')
-        or_bit_str = or_bit_str.replace('0', ' ')
-        #print(or_bit_str)
-        result.append(or_bit_str)
-    #print(result)
+    for i in range(n):
+        temp = []
+        for j in range(n):
+            # 배열을 먼저 만들기
+            # 둘 중 하나라도 '1'이면 #
+            if arr1[i][j] == '1' or arr2[i][j] == '1':
+                temp.append('#')
+            else:
+                temp.append(' ')
+            # 문자열로 변환
+        #print(temp)
+        temp = ''.join(temp)
+        result.append(temp)
     return result
+
+   
