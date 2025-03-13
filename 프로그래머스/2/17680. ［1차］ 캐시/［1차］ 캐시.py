@@ -1,26 +1,46 @@
+'''
+가장 나중것이 먼저 사라지는 알고리즘 -> 큐로 밀어내기
+
+큐에 있는지를 먼저 확인
+있다면 삭제하고 새로 넣기
+
+없으면
+    가득 차있으면 하나를 빼고 넣기
+    그렇지 않으면 넣지 않음
+'''
 from collections import deque
 def solution(cacheSize, cities):
-    # 각 도시 이름을 가져오는 총 실행시간을 구하기
-    # 하나의 도시를 구할 때마다 log n이어야 함
-    # 처음엔 캐시가 비어있음
-    # 캐시에 없는 거면 + 5 하고 캐시에 popleft + append
-    # 캐시에 있는 거면 + 1 하고 delete하고 append
-    # cities가 끝날 때까지
-    cache = deque()
-    time = 0
+    if cacheSize == 0:
+        return len(cities)*5
+    for i, city in enumerate(cities):
+        cities[i] = city.lower()
+    #print(cities)
+    cache_queue = deque([])
+    result = 0
+    def cache(city):
+        nonlocal result, cache_queue
+        # hit
+        if city in cache_queue: 
+            cache_queue.remove(city)
+            cache_queue.append(city)
+            result += 1
+        # miss
+        else:
+            # full
+            if cache_queue and len(cache_queue) == cacheSize:
+                cache_queue.popleft()
+                cache_queue.append(city)
+            else:
+                cache_queue.append(city)
+            result += 5
     for city in cities:
-        city = city.lower()
-        if city in cache: # 있을 때
-            time += 1
-            cache.remove(city)
-            cache.append(city)
-        else: # 없을 때
-            time += 5
-            if cache and len(cache) == cacheSize:
-                cache.popleft()
-            if len(cache) + 1 <= cacheSize:
-                cache.append(city)
-        #print(cache)
-    #print(time)
-    return time
+        cache(city)
+    #print(result)
+    return result
+    
+                
+        
+        
+        
+    
         
