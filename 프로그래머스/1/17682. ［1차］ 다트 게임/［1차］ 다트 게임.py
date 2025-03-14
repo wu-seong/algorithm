@@ -1,36 +1,51 @@
-#def dart(scores, current):
+'''
+3개의 점수를 기억하는 배열 만들기
+처음에는 일단 점수와 보너스를 통해서 점수를 만든다.
+그다음 옵션에 따라 수식을 만든다.
+없으면 -> 그냥 + *이면 현재 점수와 이전 점수에 *2를 한다.(처음이면 현재것만)
+#이면 0를 한다.
+
+'''
 
 def solution(dartResult):
-    # SDT - 제곱
-    # 스타상 - 이전 점수 저장, 중첩가능
-    # 아차상 - 부호 예외처리, 스타와 중첩가능
-    # 스타, 아차 둘 중 하나만 점수마다 가능
+    score = []
+    option = [False] * 3
+    def area(num, a):
+        if a == 'S':
+            return int(num)
+        elif a == 'D':
+            return int(num)**2
+        else:
+            return int(num)**3
     
-    #숫자 읽기 - 알파벳이 아닐때까지
-    #제곱 읽기 - 읽어서 num 제곱하기
-    #옵션 읽기 - 만약 alpha도 아니고 digit도 아니면 옵션
-    sq = {'S': 1, 'D':2, 'T':3}
-    n = len(dartResult)
     i = 0
-    scores = []
+    n = len(dartResult)
+    index = -1
     while i < n:
-        num = 0
-        while dartResult[i].isdigit():
-            num = (num*10) + int(dartResult[i])
+        if dartResult[i].isdigit():
+            if dartResult[i+1] == '0': # 10일때
+                score.append(area('10', dartResult[i+2]))
+                i += 3
+                continue
+            score.append(area(dartResult[i], dartResult[i+1]))
+            i += 2
+            index += 1
+        else:
+            option[index] = dartResult[i]
             i += 1
-        
-        num = num**sq[dartResult[i]]
-        scores.append(num)
-        i += 1
-        if i < n:
-            if dartResult[i] == '*': # 이전스코어와 현재 코어 두배
-                scores[-1] *= 2
-                if len(scores) >= 2:
-                    scores[-2] *= 2
-                i += 1
-            elif dartResult[i] == '#': # 현재 스코어 음수
-                scores[-1] *= -1
-                i += 1
-    #print(scores)
-    return sum(scores)
-    
+            
+    #print(score)
+    #print(option)
+    for i in range(3):
+        if option[i] == '*':
+            score[i] *= 2
+            if i-1 >= 0:
+                score[i-1] *= 2
+    result = 0
+    for i in range(3):
+        if option[i] == '#':
+            result -= score[i]
+        else:
+            result += score[i]
+    print(score)
+    return result
