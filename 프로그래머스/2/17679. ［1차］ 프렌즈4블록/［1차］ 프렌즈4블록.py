@@ -1,71 +1,72 @@
-def get_down_point(board,i,j):
-    global m
-    # 빈칸이 아닌 지점을 찾거나 바닥까지 내려왔을 때 까지 반복
-    while i < m:
-        if board[i][j] != '-':
-            return i-1
-        i += 1
-    return i-1
+'''
+810,000
+2x2 형태를 확인하기
+(x,y+1), (x+1, y), (x+1, y+1)을 확인해서 모두 나와 같으면 지울 표시하기
+지우기(지운 개수 카운팅)
+빈 곳으로 떨어지기
+아래에서부터 위로
+빈 공간이 있으면 그 다음 블록을 확인
+빈 공간이 시작된 곳으로 이동,
+
+'''
+def solution(m, n, board):
+    board = [ [board[i][j] for j in range(n)] for i in range(m)]
+    check_set = set()
+    result = 0
+    #print(board)
+    def is_same(y,x):
+        v = board[y][x]
+        if v == 0:
+            return False
+        return board[y][x+1] == v and board[y+1][x] == v and board[y+1][x+1] == v
+            
         
-def move_block(board):
-    global m,n
-    # 아래서 부터 위로
-    # 내 아래가 빈칸이면 내려보내기
-    for i in range(m-2,-1,-1): # m = 4 -> 2 1 0
+    def check(y,x):
+        nonlocal check_set
+        check_set.add((y,x))
+        check_set.add((y+1,x))
+        check_set.add((y,x+1))
+        check_set.add((y+1,x+1))
+        
+        
+    def all_check():
+        c = False
+        for i in range(m-1):
+            for j in range(n-1):
+                # 2x2임
+                if is_same(i,j):
+                    check(i,j)
+                    c = True
+        return c
+    def delete():
+        nonlocal board, result
+        for y,x in check_set:
+            result += 1
+            board[y][x] = 0
+    def move():
         for j in range(n):
-            value = board[i][j]
-            if value == '-': # 본인이 빈칸이면 내려보내지 않음
-                continue
-            if board[i+1][j] == '-': # 나의 아래가 빈칸임
-                down_point = get_down_point(board,i+1,j)
-                board[down_point][j] = value
-                board[i][j] = '-'
-    
-    
-def add_remove_set(y,x, board, remove_set): # 오른, 아래, 오른아래 확인
-    global m,n
-    target = board[y][x]
-    check= [(0,1),(1,1),(1,0)]
-    add_list = []
-    same = True
-    for dy,dx in check: # 각 묶음의 블록을 순회
-        yy = y+dy
-        xx = x+dx
-        if board[yy][xx] == target: # 같으면 삭제 리스트에 추가
-            add_list.append((yy,xx))
-        else: # 다르면 끝
-            same = False
-            break
-    if same: # 모든 블록이 존재하고 같으면 삭제 리스트 업데이트
-        add_list.append((y,x))
-        remove_set.update(set(add_list))
-                    
-m,n = 0,0
-def solution(mm, nn, board):
-    global m,n
-    m,n = mm, nn
-    board = [ [ board[i][j] for j in range(n)] for i in range(m) ]
-    total_cnt = 0 # 결과 카운팅
+            for i in range(m-1, 0, -1):
+                # 빈칸이면 위에 찾기
+                if not board[i][j]:
+                    cur = i
+                    i -= 1
+                    while i >= 0:
+                        # 블록을 찾음
+                        if board[i][j]:
+                            board[cur][j] = board[i][j]
+                            board[i][j] = 0
+                            break
+                        i -= 1
     while True:
-        remove_set = set() # 삭제할 리스트 
-        for y in range(m-1): # (0,0)~(n-1, m-1)까지 터뜨릴 블록 체크
-            for x in range(n-1):
-                if board[y][x] == '-': 
-                    continue
-                add_remove_set(y,x, board, remove_set)
-        #print(remove_set)
+        check_set = set()
+        if not all_check():
+            return result
+        delete()
+        move()
+        # for b in board:
+        #     print(b)
+        # print()
         
-        for y,x in remove_set: # 다 찾은 뒤에 -로 만들고 카운팅
-            board[y][x] = '-'
-        cnt = len(remove_set) 
-        
-        if cnt == 0: # 더 이상 터질 것이 없으면 끝
-            return total_cnt
-        total_cnt += cnt
-        # 그위에 있는 것들 아래로 채우기
-        move_block(board)
-
+   
     
-
-    
-    
+  
