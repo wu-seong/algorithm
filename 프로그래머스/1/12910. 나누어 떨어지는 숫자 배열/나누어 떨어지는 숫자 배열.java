@@ -6,18 +6,13 @@ class Solution {
         System.out.println(o);
     }
     public int[] solution(int[] arr, int divisor) {
-        List<Integer> filteredList = new ArrayList<>();
-        for(int num: arr){
-            if(num % divisor == 0){
-                filteredList.add(num);
-            }
-        }
-        Collections.sort(filteredList);
-        log(filteredList);
-        return filteredList.isEmpty() 
+        int[] filteredArr = Arrays.stream(arr)
+            .filter(n -> n % divisor == 0)
+            .toArray();
+        Arrays.sort(filteredArr);
+        
+        return filteredArr.length == 0 
             ? new int[]{-1} 
-            : filteredList.stream()
-                .mapToInt(Integer::intValue)
-                .toArray();
+            : filteredArr;
     }
 }
