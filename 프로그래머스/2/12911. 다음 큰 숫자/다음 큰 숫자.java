@@ -1,41 +1,26 @@
 class Solution {
-    public static void log(Object o){
-        System.out.println(o);
-    }
-    public static boolean isNext(int num, int target){
-        StringBuilder sb = new StringBuilder();
-        int cnt=0;
-        while(num > 0){
-            int remainder = num % 2;
-            if(remainder == 1){
-                cnt++;
-            }
-            if(cnt > target){
-                return false;
-            }
-            sb.append(remainder);
-            num /= 2;
-        }
-        return cnt == target;
-    }
     public int solution(int n) {
         /*
-        개수 세고
-        해당 0과 1의 개수로 만들 수 있는 모든 수 구하기
+        더 큰 수 중 이진변환해서 숫자 1 카운팅해서 ~하기
         */
-        
-        // 개수 세기
+        String binary_n = Integer.toString(n, 2);
         int targetCnt = 0;
-        String nString = Integer.toString(n,2);
-        for(int i=nString.length()-1; i >= 0; i--){
-            char ch = nString.charAt(i);
+        for(char ch: binary_n.toCharArray()){
             if(ch == '1'){
                 targetCnt++;
             }
         }
-        
+        //System.out.println(targetCnt);
+        int cnt;
         while(true){
-            if(isNext(++n, targetCnt)){
+            cnt = 0;
+            binary_n = Integer.toString(++n, 2);
+            for(char ch: binary_n.toCharArray()){
+                if(ch == '1'){
+                    cnt++;
+                }
+            }
+            if(cnt == targetCnt){
                 return n;
             }
         }
