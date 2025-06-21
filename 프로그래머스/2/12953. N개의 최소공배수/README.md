@@ -1,10 +1,10 @@
 # [level 2] N개의 최소공배수 - 12953 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12953) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12953?language=java) 
 
 ### 성능 요약
 
-메모리: 10.3 MB, 시간: 0.29 ms
+메모리: 81.5 MB, 시간: 0.03 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 10월 06일 01:35:45
+2025년 06월 21일 20:55:38
 
 ### 문제 설명
 
