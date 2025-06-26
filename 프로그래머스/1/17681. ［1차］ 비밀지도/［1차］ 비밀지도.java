@@ -10,10 +10,12 @@ class Solution {
             // 치환
             temp = temp.replace("1","#").replace("0"," ");
             // 공백 채우기
-            // for(int j=0; j<n-temp.length(); j++){
-            //     temp = ' ' + temp;
-            // }
-            result[i] = String.format("%" + n + "s", temp);
+            int lack = n - temp.length();
+            for(int j=0; j<lack; j++){
+                temp = ' ' + temp;
+            }
+            result[i] = temp;
+            // result[i] = String.format("%" + n + "s", temp);
             //System.out.println(temp[i]);
         }
         return result;
