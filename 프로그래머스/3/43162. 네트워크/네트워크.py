@@ -1,26 +1,39 @@
-from collections import deque
+from collections import defaultdict
+
+def dfs(num, visited, graph):
+    # 컴퓨터 number를 받아서 방문 표시하고 다음 노드 방문
+    # 방문하지 않은 노드만 방문
+    #print(num, "노드 방문")
+    for nxt in graph[num]:
+        if not nxt in visited:
+            visited.add(nxt)
+            dfs(nxt, visited, graph)
+    
+
 def solution(n, computers):
-    
-    visited = [ False for _ in range(n)]
-    queue = deque()
-    
-    cnt = 0
-    #bfs 하면서 카운팅
+    graph = defaultdict(list)
     for i in range(n):
-        # 아직 방문하지 않은 노드가 있다면 카운팅 하고 노드 순회
-        if not visited[i]:
-            cnt += 1
-            visited[i] = True
-            queue.append(i)
-            while queue:
-                a = queue.popleft()
-                for j in range(n):
-                    # 방문하지 않았고, 방문가능 하다면 방문
-                    if not visited[j] and computers[a][j] == 1:
-                        visited[j] = True
-                        # 같은 노드로는 방문 표시만
-                        if j == a:
-                            continue
-                        queue.append(j)
-    answer = cnt
-    return answer
+        for j in range(i+1, n):
+            connect = computers[i][j]
+            if connect:
+                graph[i].append(j)
+                graph[j].append(i)
+    print(graph)
+    visited = set()
+    result = 0
+    for i in range(n):
+        # 방문하지 않은 노드이면 카운팅하고 dfs
+        if i not in visited:
+            result += 1
+            visited.add(i)
+            dfs(i, visited, graph)
+    return result
+    '''
+    그래프 정보를 만들고
+    
+    0~n-1까지
+    dfs하고 dfs 시작할 때 마다 카운팅하기
+    
+    이미 방문한 노드이면 지나가기
+    
+    '''
