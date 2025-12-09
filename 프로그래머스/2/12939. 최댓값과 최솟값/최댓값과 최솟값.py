@@ -1,8 +1,6 @@
 def solution(s):
-    # 문자열은 각각 숫자로 바꾸어 리스트로 저장하기
-    num_list = list(map(int, s.split(" ")))
-    # 최댓값 최솟값 찾기
-    max_num = max(num_list)
-    min_num = min(num_list)
-    # 최댓값 최솟값 문자열로 담기
-    return " ".join(map(str,[min_num, max_num]))
+    # 문자열을 공백을 기준으로 나누어 숫자 배열로 저장
+    l = list(map(int, s.split(" ")))
+    # 숫자 배열에서 최솟값과 최댓값을 구한 뒤 숫자로 문자열로 저장 
+    return str(min(l)) + " " + str(max(l))
+    
