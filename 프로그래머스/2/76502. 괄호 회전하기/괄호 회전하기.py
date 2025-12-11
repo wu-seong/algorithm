@@ -1,31 +1,47 @@
 from collections import deque
+'''
+올바른 괄호 끼리는 덧셈, 괄호 덧붙이기 가능
+
+push/pop, 
+
+pushleft/popleft
+
+deque 만들기 
+
+0 ~ n-1 까지
+popleft -> append
+
+올바른 괄호인지 판단하기
+
+'''
+# 문자열이 올바른 괄호인지 판단하는 함수
 def is_right(s):
-    end = [']','}',')']
-    start= ['[','{','(']
+    #print(s)
     stack = []
-    # 읽어온 문자가 닫는 괄호이면
-    # stack에서 pop을 할 때 해당 문자의 여는 괄호가 와야 함
-    # 여는 괄호면 stack에 넣기
-    # 그렇지 않으면 false
-    for c in s:
-        for i in range(3):
-            if start[i] == c:
-                stack.append(end[i]) # 다음에 와야할 괄호를 저장
-            elif end[i] == c:
-                if not stack or stack.pop() != c:
-                    return False
-    # 마지막에 괄호가 닫히지 않았어도 false
+    pair = {'(': ')' , '{': '}', '[': ']'}
+    for v in s:
+        # 여는 괄호 집합이면 stack에 저장
+        if v in ['(', '{','[']:
+            stack.append(v)
+        # 닫는 괄호 집합이면 stack이 비지 않은지, 마지막 것과 짝궁인지 판단
+        else:
+            if not stack:
+                return False
+            last = stack.pop()
+            #print('v = last', v, pair[last])
+            if v != pair[last]:
+                return False
     if stack:
         return False
     return True
+        
 def solution(s):
-    # 완전탐색
-    # 문자열을 0~s길이-1 만큼 회전 시키며 올바른 괄호인지 확인
-    # 회전 = 첫번째에서 popleft하여 push하는것
     cnt = 0
-    s = deque(s)
-    for i in range(len(s)):
-        if is_right(s):
+    deq = deque(s)
+    for _ in range(len(deq)):
+        if is_right(deq):
+            #print('count')
             cnt += 1
-        s.append(s.popleft())
+        deq.append(deq.popleft())
     return cnt
+    
