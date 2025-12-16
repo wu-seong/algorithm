@@ -23,12 +23,8 @@ def solution(k, tangerine):
     for v in tangerine:
         c_dict[v] += 1
     #print(c_dict)
-    # value 값 추출
-    c_value = []
-    for key in c_dict:
-        c_value.append(c_dict[key])
-    #print(c_value)
-    sorted_value = sorted(c_value, reverse=True)
+    # value 기준으로 key 정렬
+    sorted_value = sorted(c_dict.values(), reverse=True)
     #print(sorted_value)
     
     # 바구니에 담기
