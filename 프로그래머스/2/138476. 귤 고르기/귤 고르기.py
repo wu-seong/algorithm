@@ -1,33 +1,47 @@
+'''
+종류를 최대한 적게 유지
+갯수가 많은 종류를 우선으로 선택
+
+각 종류마다 개수를 알아야함
+개수를 구한 뒤에
+개수가 많은 순으로 정렬?
+
+카운팅한 뒤에는 
+key는 중요하지 않고 value만 구하면 되긴함
+value만 구해서 리스트에 넣고 정렬
+개수가 많은 순서대로 value값을 k에서 빼기
+k = k - value
+카운팅 
+k > 0 계속 
+k <= 0 끝
+'''
 from collections import defaultdict
+
 def solution(k, tangerine):
-    # 완탐 -> 시간초과
-    # tangerine 배열에서 서로다른 귤을 6개 뽑는다
-    # 각 조합마다 set을 하여 종류의 수를 구한다.
-    # 그 중 가장 최솟값을 구한다.
+    # 카운팅
+    c_dict = defaultdict(int)
+    for v in tangerine:
+        c_dict[v] += 1
+    #print(c_dict)
+    # value 값 추출
+    c_value = []
+    for key in c_dict:
+        c_value.append(c_dict[key])
+    #print(c_value)
+    sorted_value = sorted(c_value, reverse=True)
+    #print(sorted_value)
     
-    # 그리디
-    # 같은 종류의 귤을 카운팅 하여 종류가 적은 귤부터 고르기
-    # 크기를 키, 개수를 값으로 하여 딕셔너리에 저장
-    # 큰 순서대로 k에서 빼기, 한번 연산할 때 마다 전체 종류에서 줄어 드는 것
-    # 남은 수 k가 0보다 작으면 끝남 
-    dict = defaultdict(int)
-    total_type = 0 
-    for num in tangerine: # dict 만들기
-        dict[num] += 1
-    #print("dict:", dict)
-    #print("total_type", total_type)
-    cnt_list = []
-    for key in dict: # 크기 순 정렬
-        cnt_list.append(dict[key])
-    cnt_list.sort()
-    #print(cnt_list)
-    type_cnt = 0
-    while True: 
-        k -= cnt_list.pop()
-        type_cnt += 1
+    # 바구니에 담기
+    result = 0
+    for v in sorted_value:
+        k -= v
+        result += 1
         if k <= 0:
-            break
-    return type_cnt
-    
-    
-    
+            return result
+    return result
+
+'''
+tc1) k=1, [1] -> 1
+tc2) k=2, [2,2] -> 1
+tc3) k=2, [1,2] -> 2
+'''
