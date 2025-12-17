@@ -6,21 +6,13 @@
 
 '''
 
-cnt = 0
-
 def dfs(max_depth, cur_depth, numbers, tmp, target):
-    global cnt
     if max_depth == cur_depth:
-        #print(tmp)
-        if tmp == target:
-            cnt += 1
-        return
-    dfs(max_depth, cur_depth + 1, numbers, tmp + numbers[cur_depth], target)
-    dfs(max_depth, cur_depth + 1, numbers, tmp - numbers[cur_depth], target)
+        return 1 if tmp == target else 0
+        
+    return dfs(max_depth, cur_depth + 1, numbers, tmp + numbers[cur_depth], target) + dfs(max_depth, cur_depth + 1, numbers, tmp - numbers[cur_depth], target)
 
 def solution(numbers, target):
-    global cnt
     n = len(numbers)
-    dfs(n, 0, numbers, 0, target)
-    #print("총 도달 카운트", cnt)
-    return cnt
+    return dfs(n, 0, numbers, 0, target)
+    
