@@ -6,13 +6,20 @@
 
 '''
 
-def dfs(max_depth, cur_depth, numbers, tmp, target):
-    if max_depth == cur_depth:
-        return 1 if tmp == target else 0
-        
-    return dfs(max_depth, cur_depth + 1, numbers, tmp + numbers[cur_depth], target) + dfs(max_depth, cur_depth + 1, numbers, tmp - numbers[cur_depth], target)
-
 def solution(numbers, target):
     n = len(numbers)
-    return dfs(n, 0, numbers, 0, target)
+    memo = {}
+    
+    def dfs(idx, tmp):
+        if idx == n:
+            return 1 if tmp == target else 0
+        if (idx, tmp) in memo:
+            return memo[(idx, tmp)]
+        
+        result = (dfs(idx + 1, tmp + numbers[idx]) +
+                dfs(idx + 1, tmp - numbers[idx]))
+        memo[(idx, tmp)] = result
+        return result
+        
+    return dfs(0, 0)
     
